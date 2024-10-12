@@ -1,6 +1,6 @@
 import React from "react";
-import { CartItem } from "../src/components";
-import { Header } from "../src/components";
+import { CartItem } from "../components";
+import { Header } from "../components";
 import { Link } from "react-router-dom";
 export const Cart = () => {
   return (
