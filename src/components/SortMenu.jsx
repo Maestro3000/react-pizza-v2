@@ -1,11 +1,17 @@
 import { useState, useRef, useEffect } from "react";
-export function SortMenu() {
-  const [category, setChangedCategory] = useState(0);
+export function SortMenu({ value, fnSort }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const popupRef = useRef(null);
 
-  const sortOptions = ["попопулярности", "цене", "алфавиту"];
+  const listOptions = [
+    { name: "попопулярности (DESC)", sort: "rating" },
+    { name: "попопулярности (ASC)", sort: "-rating" },
+    { name: "цене (DESC)", sort: "price" },
+    { name: "цене (ASC)", sort: "-price" },
+    { name: "алфавиту (DESC)", sort: "title" },
+    { name: "алфавиту (ASC)", sort: "-title" },
+  ];
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -17,10 +23,6 @@ export function SortMenu() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  function clickSortMenu(properties) {
-    setChangedCategory(properties);
-  }
 
   return (
     <div className="sort">
@@ -38,9 +40,7 @@ export function SortMenu() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setIsOpen(true)}>
-          {sortOptions.filter((_, index) => index === category)}
-        </span>
+        <span onClick={() => setIsOpen(!isOpen)}>{value.name}</span>
       </div>
       {isOpen && (
         <div
@@ -49,12 +49,12 @@ export function SortMenu() {
           className="sort__popup"
         >
           <ul>
-            {sortOptions.map((el, index) => (
+            {listOptions.map((obj) => (
               <li
-                className={category === index && "active"}
-                onClick={() => clickSortMenu(index)}
+                className={value.sort === obj.sort && "active"}
+                onClick={() => fnSort(obj)}
               >
-                {el}
+                {obj.name}
               </li>
             ))}
           </ul>
