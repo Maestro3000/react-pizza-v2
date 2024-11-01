@@ -11,10 +11,10 @@ export const Cart = () => {
           <div className="cart">
             <div className="cart__top">
               <h2 className="content__title">
-                <img src="/cart.svg" /> Корзина
+                <img alt="" src="/cart.svg" /> Корзина
               </h2>
               <div className="cart__clear">
-                <img src="/trash.svg" />
+                <img alt="" src="/trash.svg" />
                 <span>Очистить корзину</span>
               </div>
             </div>
@@ -35,7 +35,7 @@ export const Cart = () => {
                   to={"/"}
                   className="button button--outline button--add go-back-btn"
                 >
-                  <img src="/grey-arrow-left.svg" />
+                  <img alt="" src="/grey-arrow-left.svg" />
                   <span>Вернуться назад</span>
                 </Link>
                 <div className="button pay-btn">

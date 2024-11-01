@@ -16,11 +16,11 @@ export const CartItem = () => {
       </div>
       <div className="cart__item-count">
         <div className="button button--outline button--circle cart__item-count-minus">
-          <img src="/plus.svg" />
+          <img  alt="" src="/plus.svg" />
         </div>
         <b>2</b>
         <div className="button button--outline button--circle cart__item-count-plus">
-          <img src="/plus.svg" />
+          <img alt="" src="/plus.svg" />
         </div>
       </div>
       <div className="cart__item-price">
@@ -28,7 +28,7 @@ export const CartItem = () => {
       </div>
       <div className="cart__item-remove">
         <div className="button button--outline button--circle">
-          <img src="/plus.svg" />
+          <img alt="" src="/plus.svg" />
         </div>
       </div>
     </div>
