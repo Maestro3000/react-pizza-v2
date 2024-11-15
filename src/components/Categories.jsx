@@ -14,7 +14,7 @@ export function Categories({ value, onClickCategory }) {
       <ul>
         {category.map((categoryName, index) => (
           <li
-            key={categoryName.id}
+            key={index + categoryName}
             className={value === index ? "active" : ""}
             onClick={() => onClickCategory(index)}
             onKeyDown={""}

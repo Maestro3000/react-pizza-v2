@@ -1,81 +1,84 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addPizza, removePizza } from "../../redux/slices/counterSlice";
-
+import { addItem } from "../../redux/slices/cartSlice";
 export const PizzaBlock = (props) => {
-	const { imageUrl, title, price, sizes, types, id } = props;
-	const dispatch = useDispatch();
-	const { arrPizzas } = useSelector((state) => state.counter);
-	const [pizzaOptions, setPizzaOptions] = useState(0);
-	const [pizzaSizes, setPizzaSizes] = useState(0);
+  const { imageUrl, title, price, sizes, types, id } = props;
+  const [pizzaOptions, setPizzaOptions] = useState(0);
+  const [pizzaSizes, setPizzaSizes] = useState(0);
 
-	const pizzaTypes = {
-		0: "тонкое",
-		1: "традиционное",
-	};
+  const dispatch = useDispatch();
+  const cartItem = useSelector((state) =>
+    state.cart.items.find((obj) => obj.id === id)
+  );
 
-	function clickSizePizzas(options) {
-		setPizzaSizes(options);
-	}
+  const addedCount = cartItem ? cartItem.count : 0;
 
-	function clickPizzaOptions(properties) {
-		setPizzaOptions(properties);
-	}
+  const onClickAdd = () => {
+    const item = {
+      id,
+      title,
+      price,
+      imageUrl,
+      type: pizzaTypes[pizzaOptions],
+      size: sizes[pizzaSizes],
+    };
+    dispatch(addItem(item));
+  };
 
-	function addPizzaWithId() {
-		dispatch(addPizza(id));
-	}
+  const pizzaTypes = {
+    0: "тонкое",
+    1: "традиционное",
+  };
 
-	function removePizzaWithId() {
-		dispatch(removePizza(id));
-	}
+  function clickSizePizzas(options) {
+    setPizzaSizes(options);
+  }
 
-	const pizzaCount = arrPizzas.filter((el) => el === id).length;
+  function clickPizzaOptions(properties) {
+    setPizzaOptions(properties);
+  }
 
-	return (
-		<div className="pizza-block-wrapper">
-			<div className="pizza-block">
-				<img className="pizza-block__image" src={imageUrl} alt="Pizza" />
-				<h4 className="pizza-block__title">{title}</h4>
-				<div className="pizza-block__selector">
-					<ul>
-						{types.map((el, index) => (
-							<li
-								key={`${id}-type-${el}`}
-								className={pizzaOptions === index ? "active" : ""}
-								onClick={() => clickPizzaOptions(index)}
-								onKeyDown={""}
-							>
-								{pizzaTypes[el]}
-							</li>
-						))}
-					</ul>
-					<ul>
-						{sizes.map((el, index) => (
-							<li
-								key={`${id}-size-${el}`}
-								className={pizzaSizes === index ? "active" : ""}
-								onClick={() => clickSizePizzas(index)}
-								onKeyDown={""}
-							>
-								{el} см.
-							</li>
-						))}
-					</ul>
-				</div>
-				<div className="pizza-block__bottom">
-					<div className="pizza-block__price">от {price} ₽</div>
-					<div className="button button--outline button--add">
-						<i onClick={removePizzaWithId} onKeyDown={""}>
-							-
-						</i>
-						<span>{pizzaCount}</span>
-						<i onClick={addPizzaWithId} onKeyDown={""}>
-							+
-						</i>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+  return (
+    <div className="pizza-block-wrapper">
+      <div className="pizza-block">
+        <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
+        <h4 className="pizza-block__title">{title}</h4>
+        <div className="pizza-block__selector">
+          <ul>
+            {types.map((el, index) => (
+              <li
+                key={`${id}-type-${el}`}
+                className={pizzaOptions === index ? "active" : ""}
+                onClick={() => clickPizzaOptions(index)}
+              >
+                {pizzaTypes[el]}
+              </li>
+            ))}
+          </ul>
+          <ul>
+            {sizes.map((el, index) => (
+              <li
+                key={`${id}-size-${el}`}
+                className={pizzaSizes === index ? "active" : ""}
+                onClick={() => clickSizePizzas(index)}
+              >
+                {el} см.
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="pizza-block__bottom">
+          <div className="pizza-block__price">от {price} ₽</div>
+          <div
+            onClick={onClickAdd}
+            className="button button--outline button--add"
+          >
+            <i>+</i>
+            <span>Добавить</span>
+            {addedCount > 0 && <i>{addedCount}</i>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };

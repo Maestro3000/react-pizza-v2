@@ -1,30 +1,43 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
+import qs from "qs";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { setCategoryId, setCurrentPage } from "../redux/slices/filterSlice";
+import {
+  setCategoryId,
+  setCurrentPage,
+  setFilters,
+} from "../redux/slices/filterSlice";
 
 import { SearchContext } from "../App";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import { Categories, SortMenu, PizzaBlock, Pagination } from "../components";
+import { listOptions } from "../components/SortMenu";
 
 export function Home() {
-  const dispath = useDispatch();
-  const { categoryId, sort, currentPage } = useSelector((state) => state.filter);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isSearch = useRef(false);
+  const isMounted = useRef(false);
+
+  const { categoryId, sort, currentPage } = useSelector(
+    (state) => state.filter
+  );
 
   const { searchValue } = useContext(SearchContext);
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // const [currentPage, setCurrentPage] = useState(1);
-
   const onChangeCategory = (id) => {
-    dispath(setCategoryId(id));
+    dispatch(setCategoryId(id));
   };
   const onChangePage = (number) => {
-    dispath(setCurrentPage(number));
+    dispatch(setCurrentPage(number));
   };
 
-  useEffect(() => {
+  const fetchPizzas = () => {
+    setIsLoading(true);
+
     const order = sort.sortProperty.includes("-") ? "asc" : "desc";
     const sortBy = sort.sortProperty.replace("-", "");
     const category = categoryId > 0 ? `category=${categoryId}` : "";
@@ -38,13 +51,54 @@ export function Home() {
         setItems(response.data);
         setIsLoading(false);
       });
+  };
 
+  React.useEffect(() => {
+    if (isMounted.current) {
+      const queryString = qs.stringify({
+        sortProperty: sort.sortProperty,
+        categoryId,
+        currentPage,
+      });
+
+      navigate(`?${queryString}`);
+    }
+    isMounted.current = true;
+  }, [categoryId, sort.sortProperty, currentPage]);
+
+  // Если был первый рендер, то проверяем URl-параметры и сохраняем в редуксе
+  React.useEffect(() => {
+    if (window.location.search) {
+      const params = qs.parse(window.location.search.substring(1));
+
+      const sort = listOptions.find(
+        (obj) => obj.sortProperty === params.sortProperty
+      );
+
+      dispatch(
+        setFilters({
+          ...params,
+          sort,
+        })
+      );
+      isSearch.current = true;
+    }
+  }, []);
+
+  // Если был первый рендер, то запрашиваем пиццы
+  React.useEffect(() => {
     window.scrollTo(0, 0);
+
+    if (!isSearch.current) {
+      fetchPizzas();
+    }
+
+    isSearch.current = false;
   }, [categoryId, sort.sortProperty, searchValue, currentPage]);
 
   const pizzasItems = items.map((el) => <PizzaBlock key={el.id} {...el} />);
   const skeletonLoader = [...new Array(6)].map((_, index) => (
-    <Skeleton key={_} />
+    <Skeleton key={index} />
   ));
 
   return (
@@ -54,7 +108,7 @@ export function Home() {
         <SortMenu />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">
+      <div className="content__items" /* key={index} */>
         {isLoading ? skeletonLoader : pizzasItems}
       </div>
       <Pagination currentPage={currentPage} onChangePage={onChangePage} />

@@ -1,34 +1,65 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { addItem, minusItem, removeItem } from "../redux/slices/cartSlice";
 
-export const CartItem = () => {
+export const CartItem = ({ id, title, price, count, imageUrl, type, size }) => {
+  const dispatch = useDispatch();
+
+  const onClickPlus = () => {
+    dispatch(
+      addItem({
+        id,
+      })
+    );
+  };
+
+  const onClickMinus = () => {
+    if (count !== 0) {
+      dispatch(minusItem(id));
+    } else if (!count) {
+      dispatch(removeItem(id));
+    }
+  };
+
+  const onClickRemoveItem = () => {
+    if (window.confirm("Вы действительно хотите удалить товар из корзины?")) {
+      dispatch(removeItem(id));
+    }
+  };
+
   return (
     <div className="cart__item">
       <div className="cart__item-img">
-        <img
-          className="pizza-block__image"
-          src="https://dodopizza-a.akamaihd.net/static/Img/Products/Pizza/ru-RU/b750f576-4a83-48e6-a283-5a8efb68c35d.jpg"
-          alt="Pizza"
-        />
+        <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
       </div>
       <div className="cart__item-info">
-        <h3>Сырный цыпленок</h3>
-        <p>тонкое тесто, 26 см.</p>
+        <h3>{title}</h3>
+        <p>{type}, {size} см.</p>
       </div>
       <div className="cart__item-count">
-        <div className="button button--outline button--circle cart__item-count-minus">
-          <img  alt="" src="/plus.svg" />
+        <div
+          onClick={onClickMinus}
+          className="button button--outline button--circle cart__item-count-minus"
+        >
+          <img alt="" src="/minus.svg" />
         </div>
-        <b>2</b>
-        <div className="button button--outline button--circle cart__item-count-plus">
+        <b>{count}</b>
+        <div
+          onClick={onClickPlus}
+          className="button button--outline button--circle cart__item-count-plus"
+        >
           <img alt="" src="/plus.svg" />
         </div>
       </div>
       <div className="cart__item-price">
-        <b>770 ₽</b>
+        <b>{price * count} ₽</b>
       </div>
       <div className="cart__item-remove">
-        <div className="button button--outline button--circle">
-          <img alt="" src="/plus.svg" />
+        <div
+          onClick={onClickRemoveItem}
+          className="button button--outline button--circle"
+        >
+          <img alt="" src="/close.svg" />
         </div>
       </div>
     </div>
