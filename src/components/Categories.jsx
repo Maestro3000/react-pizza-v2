@@ -1,9 +1,8 @@
-import React from "react";
-export function Categories({ value, onClickCategory }) {
+export function Categories( {value, onClickCategory} ) {
   const category = [
     "Все",
     "Мясные",
-    "Вегатарианские",
+    "Вегетарианские",
     "Гриль",
     "Острые",
     "Закрытые",
@@ -12,16 +11,15 @@ export function Categories({ value, onClickCategory }) {
   return (
     <div className="categories">
       <ul>
-        {category.map((categoryName, index) => (
-          <li
-            key={index + categoryName}
-            className={value === index ? "active" : ""}
-            onClick={() => onClickCategory(index)}
-            onKeyDown={""}
+        { category.map( ( categoryName, index ) => (
+          <button
+            type="button"
+            onClick={ () => onClickCategory( index ) }
+            key={ index + categoryName }
           >
-            {categoryName}
-          </li>
-        ))}
+            <li className={ value === index ? "active" : "" }>{ categoryName }</li>
+          </button>
+        ) ) }
       </ul>
     </div>
   );

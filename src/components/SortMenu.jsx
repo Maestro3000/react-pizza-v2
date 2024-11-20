@@ -1,39 +1,39 @@
-import { useState, useRef, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { setListSortItems } from "../redux/slices/filterSlice";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setListSortItems } from "../redux/slices/Filter/filterSlice";
+import { selectFilter } from "../redux/slices/Filter/selector";
 
-export  const listOptions = [
-  { name: "попопулярности (DESC)", sortProperty: "rating" },
-  { name: "попопулярности (ASC)", sortProperty: "-rating" },
-  { name: "цене (DESC)", sortProperty: "price" },
-  { name: "цене (ASC)", sortProperty: "-price" },
-  { name: "алфавиту (DESC)", sortProperty: "title" },
-  { name: "алфавиту (ASC)", sortProperty: "-title" },
+export const listOptions = [
+  {name: "попопулярности (DESC)", sortProperty: "rating"},
+  {name: "попопулярности (ASC)", sortProperty: "-rating"},
+  {name: "цене (DESC)", sortProperty: "price"},
+  {name: "цене (ASC)", sortProperty: "-price"},
+  {name: "алфавиту (DESC)", sortProperty: "title"},
+  {name: "алфавиту (ASC)", sortProperty: "-title"},
 ];
+
 export function SortMenu() {
   const dispatch = useDispatch();
-  const sort = useSelector((state) => state.filter.sort);
-  const [isOpen, setIsOpen] = useState(false);
+  const {sort} = useSelector( selectFilter );
+  const [ isOpen, setIsOpen ] = useState( false );
 
-  const popupRef = useRef(null);
+  const popupRef = useRef( null );
 
- 
-
-  const onClickListItems = (obj) => {
-    dispatch(setListSortItems(obj));
-    setIsOpen(false);
+  const onClickListItems = ( obj ) => {
+    dispatch( setListSortItems( obj ) );
+    setIsOpen( false );
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
-        setIsOpen(false);
+  useEffect( () => {
+    const handleClickOutside = ( event ) => {
+      if ( popupRef.current && !popupRef.current.contains( event.target ) ) {
+        setIsOpen( false );
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    document.addEventListener( "mousedown", handleClickOutside );
+    return () => document.removeEventListener( "mousedown", handleClickOutside );
+  }, [] );
 
   return (
     <div className="sort">
@@ -52,29 +52,35 @@ export function SortMenu() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setIsOpen(!isOpen)} /* onKeyDown={""} */>{sort.name}</span>
+        <button onClick={ () => setIsOpen( !isOpen ) } type="button">
+          <span>{ sort.name }</span>
+        </button>
       </div>
-      {isOpen && (
-        <div
-          ref={popupRef}
-          onClick={() => setIsOpen(false)}
-          /* onKeyDown={""} */
+      { isOpen && (
+        <button
+          type="button"
+          ref={ popupRef }
+          onClick={ () => setIsOpen( false ) }
           className="sort__popup"
         >
           <ul>
-            {listOptions.map((obj, i) => (
-              <li
-                key={obj}
-                className={sort.sortProperty === obj.sortProperty && "active"}
-                onClick={() => onClickListItems(obj)}
-               /*  onKeyDown={""} */
+            { listOptions.map( ( obj, _i ) => (
+              <button
+                key={ JSON.stringify( obj ) }
+                onClick={ () => onClickListItems( obj ) }
+                type="button"
               >
-                {obj.name}
-              </li>
-            ))}
+                <li
+                  className={ sort.sortProperty === obj.sortProperty && "active" }
+                  /*  onKeyDown={""} */
+                >
+                  { obj.name }
+                </li>
+              </button>
+            ) ) }
           </ul>
-        </div>
-      )}
+        </button>
+      ) }
     </div>
   );
 }

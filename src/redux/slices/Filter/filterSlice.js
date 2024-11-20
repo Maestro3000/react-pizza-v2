@@ -8,7 +8,7 @@ const initialState = {
   },
 };
 
-const filterSlice = createSlice({
+export const filterSlice = createSlice({
   name: "filter",
   initialState,
   reducers: {
@@ -31,4 +31,3 @@ const filterSlice = createSlice({
 
 export const { setCategoryId, setListSortItems, setCurrentPage, setFilters } =
   filterSlice.actions;
-export default filterSlice.reducer;

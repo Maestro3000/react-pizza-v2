@@ -1,11 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
+
 const initialState = {
   categoryId: 0,
   totalPrice: 0,
   items: [],
 };
 
-const cartSlice = createSlice({
+export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
@@ -28,7 +29,10 @@ const cartSlice = createSlice({
       if (findItem) {
         findItem.count--;
       }
-      if(findItem.count === 0) {
+      state.totalPrice = state.items.reduce((sum, obj) => {
+        return sum - -obj.price * obj.count;
+      }, 0);
+      if (findItem.count.id === 0) {
         state.totalPrice = 0;
       }
     },
@@ -44,5 +48,4 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addItem, removeItem, clearItems, minusItem } = cartSlice.actions;
-export default cartSlice.reducer;
+export const {addItem, removeItem, clearItems, minusItem} = cartSlice.actions;
