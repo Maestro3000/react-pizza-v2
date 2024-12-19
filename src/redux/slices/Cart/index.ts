@@ -4,5 +4,5 @@ export {
   clearItems,
   minusItem,
   removeItem,
-} from "./cartSlice";
-export {selectCart} from "./selector";
+} from "./cartSlice.js";
+export { selectCart } from "./selector";

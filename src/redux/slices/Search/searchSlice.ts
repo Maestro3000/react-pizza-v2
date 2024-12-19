@@ -1,5 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
-const initialState = {
+import {createSlice} from "@reduxjs/toolkit";
+
+export type SearchType = {
+  value: string
+}
+
+const initialState: SearchType = {
   value: "",
 };
 
@@ -12,4 +17,4 @@ export const searchSlice = createSlice({
     },
   },
 });
-export const { setSearchValue } = searchSlice.actions;
+export const {setSearchValue} = searchSlice.actions;

@@ -1,46 +1,45 @@
 import debounce from "lodash.debounce";
-import { useCallback, useRef } from "react";
+import React, { FC, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectSearch, setSearchValue } from "../../redux/slices/Search";
 import styles from "./search.module.scss";
 
-
-export function Search() {
+export const Search: FC = () => {
   const dispatch = useDispatch();
-  const {value} = useSelector( selectSearch );
-  const inputRef = useRef();
+  // @ts-ignore
+  const { value } = useSelector(selectSearch);
+  const inputRef = useRef<HTMLInputElement>(null);
   const onClickClear = () => {
-    dispatch( setSearchValue( "" ) );
+    dispatch(setSearchValue(""));
     inputRef.current.focus();
   };
   const updateSearchValue = useCallback(
-    debounce( ( _str ) => {
-    }, 250 ),
-    []
-  )
-  const onChangeInput = ( event ) => {
-    dispatch( setSearchValue( event.target.value ) );
-    updateSearchValue( event.target.value );
+    debounce((_str: string) => {}, 250),
+    [],
+  );
+  const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setSearchValue(event.target.value));
+    updateSearchValue(event.target.value);
   };
 
   return (
-    <div className={ styles.root }>
+    <div className={styles.root}>
       <img
         alt=""
-        className={ styles.icon }
+        className={styles.icon}
         src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-search-strong-512.png"
       />
       <input
-        ref={ inputRef }
-        value={ value }
-        onChange={ onChangeInput }
-        className={ styles.input }
+        ref={inputRef}
+        value={value}
+        onChange={onChangeInput}
+        className={styles.input}
         placeholder="Поиск пиццы..."
       />
-      { value && (
-        <button onClick={ onClickClear } type="button">
+      {value && (
+        <button onClick={onClickClear} type="button">
           <svg
-            className={ styles.clearIcon }
+            className="clearIcon"
             version="1.1"
             viewBox="0 0 24 24"
             xmlSpace="preserve"
@@ -53,7 +52,7 @@ export function Search() {
             />
           </svg>
         </button>
-      ) }
+      )}
     </div>
   );
-}
+};

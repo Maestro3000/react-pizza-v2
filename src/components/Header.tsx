@@ -3,30 +3,35 @@ import { Search } from "./Search";
 
 import { useSelector } from "react-redux";
 import { selectCart } from "../redux/slices/Cart/selector";
+import React from "react";
 
 export function Header() {
-  const {items, totalPrice} = useSelector( selectCart );
-  const totalCount = items.reduce( ( sum, item ) => sum + item.count, 0 );
-  const {pathname} = useLocation()
+  // @ts-ignore
+  const { items, totalPrice } = useSelector(selectCart);
+  const totalCount = items.reduce(
+    (sum: number, item: any) => sum + item.count,
+    0,
+  );
+  const { pathname } = useLocation();
 
   return (
     <div className="header">
       <div className="container">
-        <Link to={ "/" }>
+        <Link to={"/"}>
           <div className="header__logo">
-            <img width="38" src="../pizza-logo.svg" alt="Pizza logo"/>
+            <img width="38" src="../pizza-logo.svg" alt="Pizza logo" />
             <div>
               <h1>React Pizza</h1>
               <p>самая вкусная пицца во вселенной</p>
             </div>
           </div>
         </Link>
-        <Search/>
-        { pathname !== "cart" &&
+        <Search />
+        {pathname !== "cart" && (
           <div className="header__cart">
-            <Link to={ "cart" } className="button button--cart">
-              <span>{ totalPrice } ₽</span>
-              <div className="button__delimiter"/>
+            <Link to={"cart"} className="button button--cart">
+              <span>{totalPrice} ₽</span>
+              <div className="button__delimiter" />
               <svg
                 width="18"
                 height="18"
@@ -57,9 +62,10 @@ export function Header() {
                   strokeLinejoin="round"
                 />
               </svg>
-              <span>{ totalCount }</span>
+              <span>{totalCount}</span>
             </Link>
-          </div> }
+          </div>
+        )}
       </div>
     </div>
   );

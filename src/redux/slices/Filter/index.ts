@@ -4,5 +4,5 @@ export {
   setCurrentPage,
   setCategoryId,
   setListSortItems,
-} from "./filterSlice";
+} from "./filterSlice.js";
 export { selectFilter } from "./selector";

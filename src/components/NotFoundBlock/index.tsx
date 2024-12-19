@@ -1,22 +1,22 @@
-import styles from "./NotFoundBlock.module.scss";
 import { Link } from "react-router-dom";
-import { Header } from "../Header.jsx";
+import { Header } from "../Header";
+import React, { FC } from "react";
 
-export function NotFoundBlock() {
+export const NotFoundBlock: FC = () => {
   return (
     <div className="wrapper">
-      <Header/>
-      <Link to={ "*" }>
-        <div className={ styles.root }>
-          <Link to={ "/" }>
+      <Header />
+      <Link to={"*"}>
+        <div className="root">
+          <Link to={"/"}>
             <span>😕</span>
           </Link>
           <h1>Ничего не найдено</h1>
-          <p className={ styles.description }>
+          <p className="description">
             К сожалению данная страница отсутствует в нашем интернет-магазине
           </p>
         </div>
       </Link>
     </div>
   );
-}
+};
